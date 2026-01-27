@@ -118,10 +118,13 @@ class DB:
         if self.dataFile is None:
             return (False, "ERROR: database not open")
 
-        if recordNum < 0 or recordNum >= self.numSortedRecords:
+        # Enforce 1-based record numbers
+        if recordNum < 1 or recordNum > self.numSortedRecords:
             return (False, f"ERROR: invalid record number {recordNum}")
 
-        self.dataFile.seek(recordNum * self.recordSize)
+        # Convert to 0-based file offset
+        recordIndex = recordNum - 1
+        self.dataFile.seek(recordIndex * self.recordSize)
         record = self.dataFile.read(self.recordSize)
 
         if not record:
@@ -134,3 +137,4 @@ class DB:
             pos += size
 
         return (True, out)
+
