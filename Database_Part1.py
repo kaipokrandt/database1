@@ -6,6 +6,7 @@ class DB:
         self.recordSize = 0
         self.dataFile = None
         self.dbName = None
+        self.dbOpen = False
 
         # Fixed field widths
         self.FIELD_SIZES = {
@@ -72,8 +73,16 @@ class DB:
 
     # open method to open existing database
     def open(self, dbName):
+        if(self.dbOpen):
+            print("A database is already open, close the current databse before opening a new one")
+            return
+        else:
+            self.dbOpen = True
+
         dataFilename = dbName + ".data"
         configFilename = dbName + ".config"
+
+        
 
         if not os.path.exists(dataFilename) or not os.path.exists(configFilename):
             return False
@@ -94,6 +103,7 @@ class DB:
         self.dataFile = None
         self.dbName = None
         self.numSortedRecords = 0
+        self.dbOpen = False
 
     # writeRecord method to write a record to the data file
     def writeRecord(self, name, rank, city, state, zip_code, employees):
