@@ -1,6 +1,15 @@
 import os
 from Database_Part1 import DB
 
+def print_record_result(recordNum, result):
+    ok, payload = result
+    if ok:
+        print(f"\nRecord {recordNum}:")
+        for k, v in payload.items():
+            print(f"  {k}: {v}")
+    else:
+        print(f"\nRecord {recordNum}: {payload}")
+
 def main():
     db = DB()
 
@@ -9,23 +18,33 @@ def main():
         print("2) Open database")
         print("3) Close database")
         print("4) Display record")
-        print("5) Update record")
-        print("6) Print report")
-        print("7) Add a record (pairs method)")
-        print("8) Delete a record")
-        print("9) Quit")
+        print("5) Quit")
 
         choice = input("Enter choice: ").strip()
 
         if choice == "1":
-            db.createDB("Fortune500.csv", "Fortune500", 10)
-            size = os.path.getsize("Fortune500.data")
-            print("Database created.")
+            prefix = input("Enter CSV prefix (Fortune500/Fortune500cut): ").strip()
+            csvFile = prefix + ".csv"
+            dbName = prefix
+
+            if not os.path.exists(csvFile):
+                print(f"CSV file not found: {csvFile}")
+                continue
+
+            db.createDB(csvFile, dbName, maxRecords=10)
+
+            dataFile = dbName + ".data"
+            size = os.path.getsize(dataFile)
+
+            print("Database created:")
+            print("  Config:", dbName + ".config")
+            print("  Data:  ", dbName + ".data")
             print("Expected size:", 10 * db.recordSize)
             print("Actual size:  ", size)
 
         elif choice == "2":
-            if db.open("Fortune500"):
+            dbName = input("Enter database name to open (Fortune500/Fortune500cut): ").strip()
+            if db.open(dbName):
                 print("Database opened.")
             else:
                 print("Failed to open database.")
@@ -35,30 +54,14 @@ def main():
             print("Database closed.")
 
         elif choice == "4":
-            recNum = int(input("Enter record number (0-9): "))
-            rec = db.readRecord(recNum)
-            if rec:
-                for k, v in rec.items():
-                    print(f"{k}: {v}")
-            else:
-                print("Record not found.")
+            recordNum = int(input("Enter record number: ").strip())
+            print_record_result(recordNum, db.readRecord(recordNum))
 
         elif choice == "5":
-            print("Update function is currently disabled.")
-            break
-        elif choice == "6":
-            print("Print function is currently disabled.")
-            break
-        elif choice == "7":
-            print("Add function is currently disabled.")
-            break
-        elif choice == "8":
-            print("Delete function is currently disabled.")
-            break
-        elif choice == "9":
             db.close()
             print("Exiting.")
             break
+
         else:
             print("Invalid choice.")
 

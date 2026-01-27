@@ -5,10 +5,9 @@ class DB:
         self.numSortedRecords = 0
         self.recordSize = 0
         self.dataFile = None
-        self.configFile = None
         self.dbName = None
 
-        # Fixed field sizes (must not change once chosen)
+        # Fixed field widths
         self.FIELD_SIZES = {
             "NAME": 40,
             "RANK": 6,
@@ -18,14 +17,78 @@ class DB:
             "EMPLOYEES": 10
         }
 
-        # recordSize = sum(fields) + newline
-        self.recordSize = sum(self.FIELD_SIZES.values()) + 1
+        self.recordSize = sum(self.FIELD_SIZES.values()) + 1  # + newline
 
-    def isOpen(self):
-        return self.dataFile is not None
+    # REQUIRED PART I METHODS createDB, open, close, writeRecord, readRecord
+    
+    # createDB method to create database from CSV file
+    def createDB(self, csvFilename, dbName, maxRecords=10):
+        dataFilename = dbName + ".data"
+        configFilename = dbName + ".config"
 
+        if os.path.exists(dataFilename):
+            os.remove(dataFilename)
+        if os.path.exists(configFilename):
+            os.remove(configFilename)
+
+        self.dataFile = open(dataFilename, "w+")
+        self.dbName = dbName
+        self.numSortedRecords = 0
+
+        with open(csvFilename, "r") as csvFile:
+            csvFile.readline()  # skip header
+            for _ in range(maxRecords):
+                line = csvFile.readline()
+                if not line:
+                    break
+
+                fields = line.rstrip("\n").split(",")
+                if len(fields) != 6:
+                    continue
+
+                if self.writeRecord(fields[0], fields[1], fields[2],
+                                    fields[3], fields[4], fields[5]):
+                    self.numSortedRecords += 1
+
+        self.dataFile.flush()
+        self.dataFile.close()
+        self.dataFile = None
+        self.dbName = None
+
+        with open(configFilename, "w") as cfg:
+            cfg.write(str(self.numSortedRecords) + "\n")
+            cfg.write(str(self.recordSize) + "\n")
+
+        return True
+
+    # open method to open existing database
+    def open(self, dbName):
+        dataFilename = dbName + ".data"
+        configFilename = dbName + ".config"
+
+        if not os.path.exists(dataFilename) or not os.path.exists(configFilename):
+            return False
+
+        with open(configFilename, "r") as cfg:
+            self.numSortedRecords = int(cfg.readline().strip())
+            self.recordSize = int(cfg.readline().strip())
+
+        self.dataFile = open(dataFilename, "r+")
+        self.dbName = dbName
+        return True
+    
+    # close method to close the database
+    def close(self):
+        if self.dataFile:
+            self.dataFile.close()
+
+        self.dataFile = None
+        self.dbName = None
+        self.numSortedRecords = 0
+
+    # writeRecord method to write a record to the data file
     def writeRecord(self, name, rank, city, state, zip_code, employees):
-        if not self.isOpen():
+        if self.dataFile is None:
             return False
 
         record = (
@@ -41,93 +104,24 @@ class DB:
         self.dataFile.write(record)
         return True
 
-    def createDB(self, csvFilename, dbName, maxRecords=10):
-        self.dbName = dbName
-        dataFilename = dbName + ".data"
-        configFilename = dbName + ".config"
-
-        # Remove old files if they exist
-        if os.path.exists(dataFilename):
-            os.remove(dataFilename)
-        if os.path.exists(configFilename):
-            os.remove(configFilename)
-
-        self.dataFile = open(dataFilename, "w+")
-        self.configFile = open(configFilename, "w+")
-
-        self.numSortedRecords = 0
-
-        with open(csvFilename, "r") as csvFile:
-            header = csvFile.readline()  # skip header
-
-            for _ in range(maxRecords):
-                line = csvFile.readline()
-                if not line:
-                    break
-
-                fields = line.strip().split(",")
-                if len(fields) != 6:
-                    continue
-
-                self.writeRecord(
-                    fields[0],
-                    fields[1],
-                    fields[2],
-                    fields[3],
-                    fields[4],
-                    fields[5]
-                )
-
-                self.numSortedRecords += 1
-
-        # Write config file
-        self.configFile.write(str(self.numSortedRecords) + "\n")
-        self.configFile.write(str(self.recordSize) + "\n")
-
-        self.close()
-        return True
-
-    def open(self, dbName):
-        self.dbName = dbName
-        dataFilename = dbName + ".data"
-        configFilename = dbName + ".config"
-
-        if not os.path.exists(dataFilename) or not os.path.exists(configFilename):
-            return False
-
-        self.configFile = open(configFilename, "r")
-        self.numSortedRecords = int(self.configFile.readline().strip())
-        self.recordSize = int(self.configFile.readline().strip())
-        self.configFile.close()
-
-        self.dataFile = open(dataFilename, "r+")
-        return True
-
-    def close(self):
-        if self.dataFile:
-            self.dataFile.close()
-        self.dataFile = None
-        self.configFile = None
-        self.dbName = None
-
+    # readRecord method to read a record by record number
     def readRecord(self, recordNum):
-        if not self.isOpen():
-            return None
+        if self.dataFile is None:
+            return (False, "ERROR: database not open")
 
         if recordNum < 0 or recordNum >= self.numSortedRecords:
-            return None
+            return (False, f"ERROR: invalid record number {recordNum}")
 
-        offset = recordNum * self.recordSize
-        self.dataFile.seek(offset)
+        self.dataFile.seek(recordNum * self.recordSize)
         record = self.dataFile.read(self.recordSize)
 
         if not record:
-            return None
+            return (False, f"ERROR: could not read record {recordNum}")
 
         pos = 0
-        result = {}
+        out = {}
         for field, size in self.FIELD_SIZES.items():
-            result[field] = record[pos:pos+size].strip()
+            out[field] = record[pos:pos + size].strip()
             pos += size
 
-        return result
+        return (True, out)
