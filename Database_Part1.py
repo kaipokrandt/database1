@@ -1,3 +1,5 @@
+# KAI POKRANDT WORKED WITH DHAIRYA DODIA
+
 import os
 
 class DB:
@@ -118,13 +120,10 @@ class DB:
         if self.dataFile is None:
             return (False, "ERROR: database not open")
 
-        # Enforce 1-based record numbers
-        if recordNum < 1 or recordNum > self.numSortedRecords:
+        if recordNum < 0 or recordNum >= self.numSortedRecords:
             return (False, f"ERROR: invalid record number {recordNum}")
 
-        # Convert to 0-based file offset
-        recordIndex = recordNum - 1
-        self.dataFile.seek(recordIndex * self.recordSize)
+        self.dataFile.seek(recordNum * self.recordSize)
         record = self.dataFile.read(self.recordSize)
 
         if not record:
@@ -137,4 +136,3 @@ class DB:
             pos += size
 
         return (True, out)
-
