@@ -69,10 +69,10 @@ class DB:
     #overwrite record method
     def overwriteRecord(self, record_num, record_id, experience, married, wage, industry):
         try:
-            # Calculate the byte offset of the record
+            # Calc the byte offset of the record
             offset = record_num * self.recordSize
 
-            # Move to the beginning of the specified record
+            # Move to the beginning of the record
             self.filestream.seek(offset)
 
             # Call writeRecord to output the passed-in parameters

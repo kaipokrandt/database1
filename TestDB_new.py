@@ -27,21 +27,21 @@ def main():
     db = DB()
 
     while True:
-        print("\n==== Simple File DB Menu ====")
+        print("\n~~~~~ DB Menu ~~~~~~")
         print("1) Create new database")
         print("2) Open database")
         print("3) Close database")
-        print("4) Display record (by NAME)")
-        print("5) Update record (by NAME)")
+        print("4) Display record (NAME)")
+        print("5) Update record (NAME)")
         print("6) Print report (first 10 records)")
         print("7) Add record (append unsorted)")
-        print("8) Delete record (by NAME)")
+        print("8) Delete record (NAME)")
         print("9) Quit")
 
         choice = input("Select: ").strip()
 
         if choice == "1":
-            prefix = input('CSV prefix (e.g., "Fortune500" for Fortune500.csv): ').strip()
+            prefix = input('CSV prefix (type "Fortune500" for Fortune500.csv): ').strip()
             ok = create_database_from_csv(prefix)
             if ok:
                 print(f"Created {prefix}.data and {prefix}.config")
@@ -52,7 +52,7 @@ def main():
             if db.isOpen():
                 print("A database is already open. Close it first.")
                 continue
-            prefix = input('Database prefix to open (e.g., "Fortune500"): ').strip()
+            prefix = input('Database prefix to open (type "Fortune500"): ').strip()
             ok = db.open(prefix)
             print("Opened." if ok else "Open failed (missing .config/.data?)")
 
