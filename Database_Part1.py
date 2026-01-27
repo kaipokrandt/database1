@@ -36,18 +36,27 @@ class DB:
         self.numSortedRecords = 0
 
         with open(csvFilename, "r") as csvFile:
-            csvFile.readline()  # skip header
-            for _ in range(maxRecords):
+            first_line = csvFile.readline().rstrip("\n")
+
+            # Only skip if it looks like the header
+            if first_line.upper().startswith("NAME,") and "RANK" in first_line.upper():
+                pass  # header consumed already
+            else:
+                # first line is real data, so process it
+                fields = first_line.split(",")
+                if len(fields) == 6:
+                    if self.writeRecord(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5]):
+                        self.numSortedRecords += 1
+
+            # Now read the rest up to maxRecords total
+            while self.numSortedRecords < maxRecords:
                 line = csvFile.readline()
                 if not line:
                     break
-
                 fields = line.rstrip("\n").split(",")
                 if len(fields) != 6:
                     continue
-
-                if self.writeRecord(fields[0], fields[1], fields[2],
-                                    fields[3], fields[4], fields[5]):
+                if self.writeRecord(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5]):
                     self.numSortedRecords += 1
 
         self.dataFile.flush()
