@@ -12,6 +12,7 @@ class DB:
 
         # Fixed field widths
         self.FIELD_SIZES = {
+            "KEY": 10,
             "NAME": 40,
             "RANK": 6,
             "CITY": 20,
@@ -48,7 +49,7 @@ class DB:
                 # first line is real data, so process it
                 fields = first_line.split(",")
                 if len(fields) == 6:
-                    if self.writeRecord(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5]):
+                    if self.writeRecord(str(self.numSortedRecords), fields[0], fields[1], fields[2], fields[3], fields[4], fields[5]):
                         self.numSortedRecords += 1
 
             # Now read the rest up to maxRecords total
@@ -59,7 +60,7 @@ class DB:
                 fields = line.rstrip("\n").split(",")
                 if len(fields) != 6:
                     continue
-                if self.writeRecord(fields[0], fields[1], fields[2], fields[3], fields[4], fields[5]):
+                if self.writeRecord(str(self.numSortedRecords), fields[0], fields[1], fields[2], fields[3], fields[4], fields[5]):
                     self.numSortedRecords += 1
 
         self.dataFile.flush()
@@ -112,11 +113,13 @@ class DB:
         self.dbOpen = False
 
     # writeRecord method to write a record to the data file
-    def writeRecord(self, name, rank, city, state, zip_code, employees):
+    def writeRecord(self, key, name, rank, city, state, zip_code, employees):
         if self.dataFile is None:
             return False
 
+
         record = (
+            key.ljust(self.FIELD_SIZES["KEY"]) +
             name.ljust(self.FIELD_SIZES["NAME"]) +
             rank.ljust(self.FIELD_SIZES["RANK"]) +
             city.ljust(self.FIELD_SIZES["CITY"]) +
