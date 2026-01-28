@@ -1,0 +1,116 @@
+Script started on 2026-01-28 13:49:39-06:00 [TERM="xterm" TTY="/dev/pts/27" COLUMNS="80" LINES="66"]
+[?2004h]0;ddodia@uark.edu@turing: ~/databaseManagementSystems/HW_Part1ddodia@uark.edu@turing:~/databaseManagementSystems/HW_Part1$ y[Kpython3 test[K[K[K[KTestDB_par[K[K[KPart1.py 
+[?2004l
+1) Create new database (first 10 records)
+2) Open database
+3) Close database
+4) Display record
+5) Quit
+Enter choice: 1
+Enter CSV prefix (Fortune500/Fortune500cut): Fro  ortune500cut
+Database created:
+  Config: Fortune500cut.config
+  Data:   Fortune500cut.data
+Expected size: 920
+Actual size:   920
+
+1) Create new database (first 10 records)
+2) Open database
+3) Close database
+4) Display record
+5) Quit
+Enter choice: 2
+Enter database name to open (Fortune500/Fortune500cut): Fortune500cut
+Database opened.
+
+1) Create new database (first 10 records)
+2) Open database
+3) Close database
+4) Display record
+5) Quit
+Enter choice: 2 4
+Enter record number: 0
+
+Record 0:
+  NAME: 3M
+  RANK: 94
+  CITY: MAPLEWOOD
+  STATE: MN
+  ZIP: 55144
+  EMPLOYEES: 91584
+
+1) Create new database (first 10 records)
+2) Open database
+3) Close database
+4) Display record
+5) Quit
+Enter choice: 4
+Enter record number: 9
+
+Record 9:
+  NAME: AECOM
+  RANK: 161
+  CITY: LOS ANGELES
+  STATE: CA
+  ZIP: 90067
+  EMPLOYEES: 87000
+
+1) Create new database (first 10 records)
+2) Open database
+3) Close database
+4) Display record
+5) Quit
+Enter choice: 4
+Enter record number: 5
+
+Record 5:
+  NAME: ACTIVISION BLIZZARD
+  RANK: 406
+  CITY: SANTA MONICA
+  STATE: CA
+  ZIP: 90405
+  EMPLOYEES: 9500
+
+1) Create new database (first 10 records)
+2) Open database
+3) Close database
+4) Display record
+5) Quit
+Enter choice: 4
+Enter record number: -1
+
+Record -1: ERROR: invalid record number -1
+
+1) Create new database (first 10 records)
+2) Open database
+3) Close database
+4) Display record
+5) Quit
+Enter choice: 4
+Enter record number: 100
+
+Record 100: ERROR: invalid record number 100
+
+1) Create new database (first 10 records)
+2) Open database
+3) Close database
+4) Display record
+5) Quit
+Enter choice: 4
+Enter record number: 1000
+
+Record 1000: ERROR: invalid record number 1000
+
+1) Create new database (first 10 records)
+2) Open database
+3) Close database
+4) Display record
+5) Quit
+Enter choice: 5
+Exiting.
+[?2004h]0;ddodia@uark.edu@turing: ~/databaseManagementSystems/HW_Part1ddodia@uark.edu@turing:~/databaseManagementSystems/HW_Part1$ quit
+[?2004lbash: quit: command not found
+[?2004h]0;ddodia@uark.edu@turing: ~/databaseManagementSystems/HW_Part1ddodia@uark.edu@turing:~/databaseManagementSystems/HW_Part1$ exit
+[?2004lexit
+
+Script done on 2026-01-28 13:51:25-06:00 [COMMAND_EXIT_CODE="127"]
