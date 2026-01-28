@@ -48,8 +48,6 @@ def main():
             dbName = input("Enter database name to open (Fortune500/Fortune500cut): ").strip()
             if db.open(dbName):
                 print("Database opened.")
-            else:
-                print("Failed to open database.")
 
         elif choice == "3":
             db.close()

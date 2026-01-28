@@ -85,8 +85,8 @@ class DB:
         configFilename = dbName + ".config"
 
         
-
         if not os.path.exists(dataFilename) or not os.path.exists(configFilename):
+            print("ERROR: {dataFileName} Database does not exist")
             return False
 
         with open(configFilename, "r") as cfg:
@@ -99,6 +99,10 @@ class DB:
     
     # close method to close the database
     def close(self):
+        if(not self.dbOpen):
+            print("No Database is currently opened.")
+            return
+        
         if self.dataFile:
             self.dataFile.close()
 
