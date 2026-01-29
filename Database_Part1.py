@@ -1,4 +1,9 @@
 # KAI POKRANDT WORKED WITH DHAIRYA DODIA
+# 
+# Class: Database Management Systems
+# Authors: Dhairya Dodia, Kai Pokrandt
+# Assignment: Homework Part I
+# Date: 01/28/2026
 
 import os
 
