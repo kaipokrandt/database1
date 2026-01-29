@@ -9,12 +9,6 @@ class DB:
         self.dataFile = None
         self.dbName = None
         self.dbOpen = False
-        self.databases = []
-        self.databaseProperties = {
-            "name" : "",
-            "isOpen" : False,
-            "numSortedRecords" : 0
-        }
 
         # Fixed field widths
         self.FIELD_SIZES = {
@@ -27,7 +21,7 @@ class DB:
             "EMPLOYEES": 10
         }
 
-        self.totalFieldSize = sum(self.FIELD_SIZES.values()) # + newline
+        self.totalFieldSize = sum(self.FIELD_SIZES.values()) # +  1  if on windows
 
     # REQUIRED PART I METHODS createDB, open, close, writeRecord, readRecord
 
@@ -95,8 +89,10 @@ class DB:
         
         cfg.close()
         
+        # Reset values
         self.numSortedRecords = 0
         self.recordSize = 0
+
         return True
 
     # open method to open existing database
@@ -146,7 +142,7 @@ class DB:
 
 
         record = (
-            key.ljust(self.FIELD_SIZES["KEY"]) +
+            key.ljust(self.FIELD_SIZES["KEY"]) + # Primary KEY
             name.ljust(self.FIELD_SIZES["NAME"]) +
             rank.ljust(self.FIELD_SIZES["RANK"]) +
             city.ljust(self.FIELD_SIZES["CITY"]) +
@@ -183,5 +179,3 @@ class DB:
 
         return (True, out)
     
-    # def isOpen(self, dbName):
-    #     if()
