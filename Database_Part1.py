@@ -165,7 +165,7 @@ class DB:
         if recordNum < 0 or recordNum >= self.numSortedRecords:
             return (False, f"ERROR: invalid record number {recordNum}")
 
-        self.dataFile.seek(recordNum * self.totalFieldSize)
+        self.dataFile.seek(recordNum * self.totalFieldSize) # Read every field size byte
         record = self.dataFile.read(self.totalFieldSize)
 
         if not record:
@@ -175,7 +175,7 @@ class DB:
         out = {}
         for field, size in self.FIELD_SIZES.items():
             out[field] = record[pos:pos + size].strip()
-            pos += size
+            pos += size #Seek ahead every item size
 
-        return (True, out)
+        return (True, out) # Return a tuple
     
