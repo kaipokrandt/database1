@@ -33,7 +33,7 @@ def main():
                 print(f"CSV file not found: {csvFile}")
                 continue
 
-            db.createDB(csvFile, dbName, maxRecords=10)
+            db.createDB(csvFile, dbName)
 
             dataFile = dbName + ".data"
             size = os.path.getsize(dataFile)
@@ -41,7 +41,7 @@ def main():
             print("Database created:")
             print("  Config:", dbName + ".config")
             print("  Data:  ", dbName + ".data")
-            print("Expected size:", 10 * db.recordSize)
+            print("Expected size:", db.recordSize)
             print("Actual size:  ", size)
 
         elif choice == "2":
